@@ -2,11 +2,6 @@ name: Build OpenWrt
 
 on:
   workflow_dispatch:
-    inputs:
-      target:
-        required: true
-        type: string
-        default: "mediatek_filogic_DEVICE_bananapi_bpi-r4"
 
 permissions:
   contents: write
@@ -21,8 +16,8 @@ jobs:
 
       - name: Get openwrt sources
         run: |
-          chmod +x ./get-openwrt-sources.sh
-          ./get-openwrt-sources.sh
+          git clone --depth 1 https://github.com/openwrt/openwrt.git
+          cd openwrt
 
       - name: Free disk space on runner
         run: |
@@ -51,7 +46,7 @@ jobs:
       - name: Run builder script
         run: |
           chmod +x ./bpi-r4-openwrt-builder.sh
-          ./bpi-r4-openwrt-builder.sh ${{ inputs.target }}
+          ./bpi-r4-openwrt-builder.sh
 
       - name: List built images
         if: always()
@@ -64,32 +59,24 @@ jobs:
           cd openwrt/bin/targets/mediatek/filogic
           zip -r openwrt-bpi-r4-images.zip .
 
-      - name: Set short SHA and tag
-        id: vars
-        run: |
-          SHORT_SHA=$(git rev-parse --short HEAD)
-          echo "short_sha=${SHORT_SHA}" >> "$GITHUB_OUTPUT"
-          echo "tag_name=bpi-r4-commit-${SHORT_SHA}" >> "$GITHUB_OUTPUT"
-
       - name: Upload firmware artifacts (latest)
         if: success()
         uses: actions/upload-artifact@v4
         with:
           name: openwrt-bpi-r4-images
-          path: openwrt/bin/targets/mediatek/filogic/
+          path: openwrt/bin/targets/mediatek/filogic/openwrt-bpi-r4-images.zip
 
       - name: Create or update GitHub Release (latest)
         if: success()
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ inputs.target }}-latest
-          name: ${{ inputs.target }} manual build (latest)
+          tag_name: bpi-r4-latest
+          name: "BananaPi BPI-R4 OpenWrt Build (latest)"
           body: |
-            Built from ref: ${GITHUB_SHA}
+            Build date: $(date -u +"%Y-%m-%d %H:%M UTC")
           draft: false
           prerelease: false
           files: |
             openwrt/bin/targets/mediatek/filogic/openwrt-bpi-r4-images.zip
-            openwrt/bin/targets/mediatek/filogic/sha256sums
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
