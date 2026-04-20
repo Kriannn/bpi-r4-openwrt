@@ -1,6 +1,6 @@
 #!/bin/bash
 set -euo pipefail
-target=mediatek_filogic_DEVICE_bananapi_bpi-r4
+target="mediatek_filogic_DEVICE_bananapi_bpi-r4"
 
 echo "building for target ${target}"
 
