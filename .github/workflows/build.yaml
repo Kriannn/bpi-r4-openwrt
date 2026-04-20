@@ -25,8 +25,10 @@ jobs:
           
       - name: Run builder script
         run: |
-          chmod +x ./bpi-r4-openwrt-builder.sh
-          ./bpi-r4-openwrt-builder.sh
+          cd openwrt;
+          ./scripts/feeds update -a && ./scripts/feeds install -a
+          cp ../configs/bpi-r4.config .config
+          make -j $(nproc) defconfig download clean world
 
       - name: Create ZIP with all images
         if: success()
