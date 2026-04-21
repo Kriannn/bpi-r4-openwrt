@@ -18,7 +18,7 @@ jobs:
 
       - name: Get openwrt sources
         run: |
-          git clone --depth 1 https://github.com/openwrt/openwrt.git
+          git clone https://github.com/openwrt/openwrt.git
           
       - name: Run builder script
         run: |
