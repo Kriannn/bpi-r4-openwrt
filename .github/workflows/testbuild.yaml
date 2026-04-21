@@ -27,11 +27,7 @@ jobs:
         run: |
           cd openwrt;
           ./scripts/feeds update -a && ./scripts/feeds install -a
-          cat > .config << 'EOF'
-CONFIG_TARGET_mediatek=y
-CONFIG_TARGET_mediatek_filogic=y
-CONFIG_TARGET_mediatek_filogic_DEVICE_bananapi_bpi-r4=y
-EOF
+          printf "CONFIG_TARGET_mediatek=y\nCONFIG_TARGET_mediatek_filogic=y\nCONFIG_TARGET_mediatek_filogic_DEVICE_bananapi_bpi-r4=y\n" > .config
           make defconfig
 
       - name: Display config
