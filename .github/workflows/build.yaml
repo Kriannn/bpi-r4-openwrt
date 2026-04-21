@@ -11,9 +11,6 @@ jobs:
     runs-on: ubuntu-24.04
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
       - name: Install build dependencies
         run: |
           sudo apt update
@@ -42,18 +39,3 @@ jobs:
         with:
           name: openwrt-bpi-r4-images
           path: openwrt/bin/targets/mediatek/filogic/openwrt-bpi-r4-images.zip
-
-      - name: Create or update GitHub Release (latest)
-        if: success()
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: bpi-r4-latest
-          name: "BananaPi BPI-R4 OpenWrt Build (latest)"
-          body: |
-            Build date: $(date -u +"%Y-%m-%d %H:%M UTC")
-          draft: false
-          prerelease: false
-          files: |
-            openwrt/bin/targets/mediatek/filogic/openwrt-bpi-r4-images.zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
