@@ -24,7 +24,7 @@ jobs:
         run: |
           cd openwrt;
           ./scripts/feeds update -a && ./scripts/feeds install -a
-          printf "CONFIG_TARGET_mediatek=y\nCONFIG_TARGET_mediatek_filogic=y\nCONFIG_TARGET_mediatek_filogic_DEVICE_bananapi_bpi-r4=y\nCONFIG_TESTING_KERNEL=y\n" > .config
+          printf "CONFIG_TARGET_mediatek=y\nCONFIG_TARGET_mediatek_filogic=y\nCONFIG_TARGET_mediatek_filogic_DEVICE_bananapi_bpi-r4=y\n" > .config
           mkdir -p package/kernel/mt76/patches
           curl -SL https://github.com/openwrt/mt76/commit/8088940ffd047a6d282a95af829562e8038f5b2d.patch > package/kernel/mt76/patches/001-Add-tx_power-check-Yukariin.patch
           curl -SL https://github.com/openwrt/mt76/commit/aaf90b24fde77a38ee9f0a60d7097ded6a94ad1f.patch > package/kernel/mt76/patches/001-use-tx_power-from-default-fw-if-EEPROM-contains-0s-im-0.patch
