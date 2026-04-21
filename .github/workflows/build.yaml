@@ -27,7 +27,7 @@ jobs:
         run: |
           cd openwrt;
           ./scripts/feeds update -a && ./scripts/feeds install -a
-          cp ../configs/bpi-r4.config .config
+          printf "CONFIG_TARGET_mediatek=y\nCONFIG_TARGET_mediatek_filogic=y\nCONFIG_TARGET_mediatek_filogic_DEVICE_bananapi_bpi-r4=y\n" > .config
           make -j $(nproc) defconfig download clean world
 
       - name: Create ZIP with all images
