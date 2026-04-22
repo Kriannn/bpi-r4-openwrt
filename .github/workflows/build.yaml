@@ -19,7 +19,7 @@ jobs:
           
       - name: Run build
         run: |
-          git clone --depth 1 https://github.com/openwrt/openwrt.git
+          git clone --depth 1 https://git.openwrt.org/openwrt/openwrt.git
           cd openwrt
           ./scripts/feeds update -a
           ./scripts/feeds install -a
