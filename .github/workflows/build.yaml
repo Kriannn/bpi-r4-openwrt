@@ -16,15 +16,13 @@ jobs:
           sudo apt-get update
           sudo apt-get upgrade -y
           sudo apt-get install -y build-essential clang flex bison g++ gawk gcc-multilib g++-multilib gettext git libncurses5-dev libssl-dev python3-setuptools rsync swig unzip zlib1g-dev file wget
-
-      - name: Get openwrt sources
+          
+      - name: Run build
         run: |
           git clone --depth 1 https://github.com/openwrt/openwrt.git
-          
-      - name: Run builder script
-        run: |
-          cd openwrt;
-          ./scripts/feeds update -a && ./scripts/feeds install -a
+          cd openwrt
+          ./scripts/feeds update -a
+          ./scripts/feeds install -a
           printf "CONFIG_TARGET_mediatek=y\nCONFIG_TARGET_mediatek_filogic=y\nCONFIG_TARGET_mediatek_filogic_DEVICE_bananapi_bpi-r4=y\n" > .config
           mkdir -p package/kernel/mt76/patches
           curl -SL https://raw.githubusercontent.com/immortalwrt/immortalwrt/refs/heads/master/package/kernel/mt76/patches/100-wifi-mt76-mt7996-Use-tx_power-from-default-fw-if-EEP.patch > package/kernel/mt76/patches/100-wifi-mt76-mt7996-Use-tx_power-from-default-fw-if-EEP.patch
