@@ -30,7 +30,7 @@ jobs:
           curl -SL https://raw.githubusercontent.com/immortalwrt/immortalwrt/refs/heads/master/package/kernel/mt76/patches/100-wifi-mt76-mt7996-Use-tx_power-from-default-fw-if-EEP.patch > package/kernel/mt76/patches/100-wifi-mt76-mt7996-Use-tx_power-from-default-fw-if-EEP.patch
           make defconfig
           make download
-          make -j $(nproc) world
+          make world
 
       - name: Create ZIP with all images
         if: success()
