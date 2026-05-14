@@ -32,14 +32,13 @@ jobs:
           make download
           make world
 
-      - name: Create ZIP with all images
-        if: success()
-        run: |
-          cd openwrt/bin/targets/mediatek/filogic
-          zip -r openwrt-bpi-r4-images.zip .
-
       - name: Upload firmware
         if: success()
         uses: actions/upload-artifact@v7
         with:
-          path: openwrt/bin/targets/mediatek/filogic/openwrt-bpi-r4-images.zip
+          name: openwrt-bpi-r4-images
+          path: |
+            openwrt/bin/targets/mediatek/filogic/*.img.gz
+            openwrt/bin/targets/mediatek/filogic/*.itb
+            openwrt/bin/targets/mediatek/filogic/*.fip
+            openwrt/bin/targets/mediatek/filogic/*.bin
