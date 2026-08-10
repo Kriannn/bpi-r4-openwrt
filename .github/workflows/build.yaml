@@ -32,13 +32,21 @@ jobs:
           make download
           make world
 
-      - name: Upload firmware
+      - name: Create ZIP with all images
         if: success()
-        uses: actions/upload-artifact@v7
-        with:
-          name: openwrt-bpi-r4-images
-          path: |
-            openwrt/bin/targets/mediatek/filogic/*.img.gz
-            openwrt/bin/targets/mediatek/filogic/*.itb
-            openwrt/bin/targets/mediatek/filogic/*.fip
-            openwrt/bin/targets/mediatek/filogic/*.bin
+        run: |
+          cd openwrt/bin/targets/mediatek/filogic
+          zip -r openwrt-bpi-r4-images.zip .
+
+      - name: Create GitHub Release
+        if: success()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG_NAME="openwrt-bpi-r4-$(date +'%Y.%m.%d-%H%M')"
+          RELEASE_TITLE="OpenWrt BPi-R4 Build ($(date +'%Y-%m-%d %H:%M'))"
+          
+          gh release create "$TAG_NAME" \
+            openwrt/bin/targets/mediatek/filogic/openwrt-bpi-r4-images.zip \
+            --title "$RELEASE_TITLE" \
+            --notes "Automated daily build of OpenWrt for Banana Pi BPi-R4."
