@@ -1,1 +1,1 @@
-Downloads on github actions
+Download images from releases
