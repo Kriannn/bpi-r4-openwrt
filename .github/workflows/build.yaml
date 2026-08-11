@@ -48,5 +48,6 @@ jobs:
           
           gh release create "$TAG_NAME" \
             openwrt/bin/targets/mediatek/filogic/openwrt-bpi-r4-images.zip \
+            --repo ${{ github.repository }} \
             --title "$RELEASE_TITLE" \
             --notes "Automated daily build of OpenWrt for Banana Pi BPi-R4."
