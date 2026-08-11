@@ -1,0 +1,35 @@
+--- a/mt7996/eeprom.c
++++ b/mt7996/eeprom.c
+@@ -95,6 +95,24 @@ mt7996_eeprom_parse_stream(const u8 *eep
+ 	}
+ }
+ 
++static void
++mt7996_eeprom_fixup_tx_power(struct mt7996_dev *dev, const u8 *def)
++{
++	u8 *eeprom = dev->mt76.eeprom.data;
++	int i;
++
++	if (!eeprom[MT_EE_TX0_POWER_2G])
++		eeprom[MT_EE_TX0_POWER_2G] = def[MT_EE_TX0_POWER_2G];
++
++	for (i = MT_EE_TX0_POWER_5G; i < MT_EE_TX0_POWER_5G + 5; ++i)
++		if (!eeprom[i])
++			eeprom[i] = def[i];
++
++	for (i = MT_EE_TX0_POWER_6G; i < MT_EE_TX0_POWER_6G + 8; ++i)
++		if (!eeprom[i])
++			eeprom[i] = def[i];
++}
++
+ static bool mt7996_eeprom_variant_valid(struct mt7996_dev *dev, const u8 *def)
+ {
+ #define FEM_INT	0
+@@ -150,6 +168,8 @@ mt7996_eeprom_check_or_use_default(struc
+ 		goto out;
+ 	}
+ 
++	mt7996_eeprom_fixup_tx_power(dev, fw->data);
++
+ 	if (!use_default && mt7996_eeprom_variant_valid(dev, fw->data))
+ 		goto out;
