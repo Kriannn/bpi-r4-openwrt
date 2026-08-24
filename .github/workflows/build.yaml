@@ -44,7 +44,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           TAG_NAME="openwrt-bpi-r4-$(date +'%Y.%m.%d-%H%M')"
-          RELEASE_TITLE="($(date +'%Y-%m-%d %H:%M'))"
+          RELEASE_TITLE="$(date +'%Y-%m-%d %H:%M')"
           
           gh release create "$TAG_NAME" \
             openwrt/bin/targets/mediatek/filogic/openwrt-bpi-r4-images.zip \
