@@ -34,9 +34,28 @@ jobs:
           # CONFIG_DROPBEAR_DBCLIENT is not set
           # CONFIG_DROPBEAR_SK_KEYS is not set
           # CONFIG_GDB is not set
+          CONFIG_GNUTLS_ALPN=y
+          CONFIG_GNUTLS_ANON=y
+          CONFIG_GNUTLS_DTLS_SRTP=y
+          CONFIG_GNUTLS_HEARTBEAT=y
+          CONFIG_GNUTLS_OCSP=y
+          CONFIG_GNUTLS_PSK=y
           # CONFIG_KERNEL_CGROUPS is not set
           # CONFIG_KERNEL_DEBUG_INFO is not set
           # CONFIG_KERNEL_ELF_CORE is not set
+          CONFIG_OPENSSL_ENGINE=y
+          CONFIG_OPENSSL_WITH_ASM=y
+          CONFIG_OPENSSL_WITH_CHACHA_POLY1305=y
+          CONFIG_OPENSSL_WITH_CMS=y
+          CONFIG_OPENSSL_WITH_DEPRECATED=y
+          CONFIG_OPENSSL_WITH_ERROR_MESSAGES=y
+          CONFIG_OPENSSL_WITH_IDEA=y
+          CONFIG_OPENSSL_WITH_MDC2=y
+          CONFIG_OPENSSL_WITH_PSK=y
+          CONFIG_OPENSSL_WITH_SEED=y
+          CONFIG_OPENSSL_WITH_SRP=y
+          CONFIG_OPENSSL_WITH_TLS13=y
+          CONFIG_OPENSSL_WITH_WHIRLPOOL=y
           # CONFIG_PACKAGE_dnsmasq is not set
           # CONFIG_PACKAGE_eip197-mini-firmware is not set
           # CONFIG_PACKAGE_kmod-crypto-authenc is not set
@@ -53,6 +72,24 @@ jobs:
           CONFIG_PACKAGE_kmod-tun=y
           # CONFIG_PACKAGE_kmod-usb-core is not set
           # CONFIG_PACKAGE_kmod-usb3 is not set
+          CONFIG_PACKAGE_knot-libs=y
+          CONFIG_PACKAGE_knot-libzscanner=y
+          CONFIG_PACKAGE_knot-resolver=y
+          # CONFIG_PACKAGE_knot-resolver_dnstap is not set
+          CONFIG_PACKAGE_libatomic=y
+          CONFIG_PACKAGE_libgmp=y
+          CONFIG_PACKAGE_libgnutls=y
+          CONFIG_PACKAGE_liblua=y
+          CONFIG_PACKAGE_libnettle=y
+          CONFIG_PACKAGE_libnghttp2=y
+          CONFIG_PACKAGE_libopenssl=y
+          CONFIG_PACKAGE_libstdcpp=y
+          CONFIG_PACKAGE_libuv=y
+          CONFIG_PACKAGE_lmdb=y
+          CONFIG_PACKAGE_lua=y
+          CONFIG_PACKAGE_luajit=y
+          CONFIG_PACKAGE_luasec=y
+          CONFIG_PACKAGE_luasocket=y
           # CONFIG_PACKAGE_mtd is not set
           CONFIG_PACKAGE_odhcpd=y
           # CONFIG_PACKAGE_odhcpd-ipv6only is not set
