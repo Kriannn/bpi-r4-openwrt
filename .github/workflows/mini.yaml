@@ -1,0 +1,93 @@
+name: Build mini OpenWrt
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get upgrade -y
+          sudo apt-get install -y bzip2 g++ gawk gcc git glibc-source libncurses-dev make
+          
+      - name: Run build
+        run: |
+          git clone --depth 1 https://git.openwrt.org/openwrt/openwrt.git
+          cd openwrt
+          ./scripts/feeds update -a
+          ./scripts/feeds install -a
+          cat << 'EOF' > .config
+          CONFIG_TARGET_mediatek=y
+          CONFIG_TARGET_mediatek_filogic=y
+          CONFIG_TARGET_mediatek_filogic_DEVICE_bananapi_bpi-r4=y
+          CONFIG_DEVEL=y
+          CONFIG_TOOLCHAINOPTS=y
+          # CONFIG_DROPBEAR_DBCLIENT is not set
+          # CONFIG_DROPBEAR_SK_KEYS is not set
+          # CONFIG_GDB is not set
+          # CONFIG_KERNEL_CGROUPS is not set
+          # CONFIG_KERNEL_DEBUG_INFO is not set
+          # CONFIG_KERNEL_ELF_CORE is not set
+          # CONFIG_PACKAGE_dnsmasq is not set
+          # CONFIG_PACKAGE_eip197-mini-firmware is not set
+          # CONFIG_PACKAGE_kmod-crypto-authenc is not set
+          # CONFIG_PACKAGE_kmod-crypto-des is not set
+          # CONFIG_PACKAGE_kmod-crypto-hw-safexcel is not set
+          # CONFIG_PACKAGE_kmod-crypto-md5 is not set
+          # CONFIG_PACKAGE_kmod-crypto-sha1 is not set
+          # CONFIG_PACKAGE_kmod-crypto-sha256 is not set
+          # CONFIG_PACKAGE_kmod-gpio-button-hotplug is not set
+          # CONFIG_PACKAGE_kmod-lib-crc-itu-t is not set
+          # CONFIG_PACKAGE_kmod-mt7996-firmware is not set
+          # CONFIG_PACKAGE_kmod-nls-base is not set
+          # CONFIG_PACKAGE_kmod-phy-aquantia is not set
+          # CONFIG_PACKAGE_kmod-usb-core is not set
+          # CONFIG_PACKAGE_kmod-usb3 is not set
+          # CONFIG_PACKAGE_mtd is not set
+          CONFIG_PACKAGE_odhcpd=y
+          # CONFIG_PACKAGE_odhcpd-ipv6only is not set
+          # CONFIG_PACKAGE_uboot-envtools is not set
+          # CONFIG_PACKAGE_uci is not set
+          # CONFIG_PACKAGE_wpad-basic-mbedtls is not set
+          CONFIG_PACKAGE_wpad-mbedtls=y
+          CONFIG_TARGET_OPTIMIZATION="-O2 -pipe -mcpu=cortex-a73+crypto+crc"
+          CONFIG_TARGET_OPTIONS=y
+          CONFIG_USE_GC_SECTIONS=y
+          CONFIG_USE_LTO=y
+          CONFIG_USE_MKLIBS=y
+          CONFIG_WIFI_SCRIPTS_WPS_BUTTON_DISABLED=y
+          EOF
+          mkdir -p package/kernel/mt76/patches
+          curl -SL https://raw.githubusercontent.com/immortalwrt/immortalwrt/refs/heads/master/package/kernel/mt76/patches/100-wifi-mt76-mt7996-Use-tx_power-from-default-fw-if-EEP.patch > package/kernel/mt76/patches/100-wifi-mt76-mt7996-Use-tx_power-from-default-fw-if-EEP.patch
+          make defconfig
+          make download
+          make world
+
+      - name: Create ZIP with all images
+        if: success()
+        run: |
+          cd openwrt/bin/targets/mediatek/filogic
+          zip -r openwrt-bpi-r4-images.zip .
+
+      - name: Create GitHub Release
+        if: success()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG_NAME="openwrt-bpi-r4-$(date +'%Y.%m.%d-%H%M')"
+          RELEASE_TITLE="$(date +'%Y-%m-%d %H:%M')"
+          
+          gh release create "$TAG_NAME" \
+            openwrt/bin/targets/mediatek/filogic/openwrt-bpi-r4-images.zip \
+            --repo ${{ github.repository }} \
+            --title "$RELEASE_TITLE" \
+            --notes "Automated daily build of OpenWrt for Banana Pi BPi-R4."
