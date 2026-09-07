@@ -98,7 +98,6 @@ jobs:
           CONFIG_TARGET_OPTIONS=y
           CONFIG_USE_GC_SECTIONS=y
           CONFIG_USE_LTO=y
-          CONFIG_USE_MKLIBS=y
           CONFIG_WIFI_SCRIPTS_WPS_BUTTON_DISABLED=y
           EOF
           mkdir -p package/kernel/mt76/patches
